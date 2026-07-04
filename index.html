@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CireneFlow — Effortless voice dictation for Mac</title>
+<meta name="description" content="CireneFlow turns your voice into clean, formatted text in every app on your Mac — powered entirely by on-device AI. Private by design. Available by invitation." />
+<meta property="og:title" content="CireneFlow — Effortless voice dictation for Mac" />
+<meta property="og:description" content="Speak instead of typing. On-device AI turns your voice into polished text in any app. Private by design. By invitation only." />
+<meta property="og:type" content="website" />
+<meta name="theme-color" content="#0e0d14" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236a7bff'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='26' fill='url(%23g)'/%3E%3Cg fill='white'%3E%3Crect x='30' y='40' width='6' height='20' rx='3'/%3E%3Crect x='42' y='30' width='6' height='40' rx='3'/%3E%3Crect x='54' y='36' width='6' height='28' rx='3'/%3E%3Crect x='66' y='44' width='6' height='12' rx='3'/%3E%3C/g%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#faf9f6;
+    --bg-2:#f2f0ea;
+    --ink:#15141b;
+    --ink-soft:#4b4956;
+    --ink-faint:#7c7a86;
+    --line:rgba(21,20,27,.10);
+    --card:#ffffff;
+    --brand:#6a7bff;
+    --brand-2:#a855f7;
+    --brand-ink:#4b3bd6;
+    --radius:22px;
+    --shadow:0 1px 2px rgba(21,20,27,.04), 0 12px 40px rgba(21,20,27,.08);
+    --shadow-lg:0 30px 80px rgba(74,59,214,.18);
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:13px;font-weight:600;letter-spacing:.02em;
+    color:var(--brand-ink);
+    background:linear-gradient(120deg,rgba(106,123,255,.12),rgba(168,85,247,.12));
+    border:1px solid rgba(106,123,255,.22);
+    padding:7px 14px;border-radius:999px;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--brand-2);box-shadow:0 0 0 4px rgba(168,85,247,.18)}
+  .grad-text{background:linear-gradient(110deg,var(--brand) 10%,var(--brand-2) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    font-weight:600;font-size:15px;padding:13px 22px;border-radius:14px;
+    border:1px solid transparent;cursor:pointer;transition:.18s ease;white-space:nowrap;
+  }
+  .btn-primary{color:#fff;background:linear-gradient(120deg,var(--brand),var(--brand-2));box-shadow:0 8px 24px rgba(106,123,255,.35)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 30px rgba(106,123,255,.42)}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{background:var(--bg-2);border-color:rgba(21,20,27,.18)}
+
+  /* NAV */
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(160%) blur(14px);background:rgba(250,249,246,.72);border-bottom:1px solid transparent;transition:.25s}
+  header.nav.scrolled{border-bottom-color:var(--line);background:rgba(250,249,246,.85)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:18px;letter-spacing:-.01em}
+  .logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;box-shadow:0 4px 12px rgba(106,123,255,.4)}
+  .logo .mark svg{width:17px;height:17px}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a.link{font-size:14.5px;font-weight:500;color:var(--ink-soft);transition:.15s}
+  .nav-links a.link:hover{color:var(--ink)}
+  .nav-cta{display:flex;align-items:center;gap:12px}
+  @media(max-width:760px){.nav-links .link{display:none}}
+
+  /* HERO */
+  .hero{position:relative;padding:clamp(56px,9vw,110px) 0 40px;text-align:center;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0}
+  .blob.b1{width:520px;height:520px;background:radial-gradient(circle,#8ea2ff,transparent 68%);top:-160px;left:-120px}
+  .blob.b2{width:480px;height:480px;background:radial-gradient(circle,#d6a8ff,transparent 68%);top:-80px;right:-120px}
+  .hero .wrap{position:relative;z-index:1}
+  h1{font-size:clamp(38px,6.4vw,72px);line-height:1.03;letter-spacing:-.03em;font-weight:800;margin:22px auto 0;max-width:15ch}
+  .hero p.sub{font-size:clamp(17px,2.1vw,21px);color:var(--ink-soft);max-width:60ch;margin:22px auto 0}
+  .hero .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+  .hero .meta{margin-top:20px;font-size:13.5px;color:var(--ink-faint);display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center}
+  .hero .meta b{color:var(--ink-soft);font-weight:600}
+  .sep{width:4px;height:4px;border-radius:50%;background:var(--ink-faint);opacity:.5}
+
+  /* DEMO CARD */
+  .demo{position:relative;z-index:1;margin:56px auto 0;max-width:900px}
+  .demo-card{background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow-lg);overflow:hidden;text-align:left}
+  .demo-top{display:flex;align-items:center;gap:8px;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .tdot{width:11px;height:11px;border-radius:50%}
+  .tdot.r{background:#ff5f57}.tdot.y{background:#febc2e}.tdot.g{background:#28c840}
+  .demo-top .title{margin-left:10px;font-size:13px;color:var(--ink-faint);font-weight:500}
+  .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .demo-col{padding:26px 26px 30px}
+  .demo-col.raw{border-right:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbfbfd)}
+  .demo-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+  .demo-label.raw{color:var(--ink-faint)}
+  .demo-label.clean{color:var(--brand-ink)}
+  .demo-col p{font-size:15.5px;color:var(--ink-soft)}
+  .demo-col.clean p{color:var(--ink)}
+  .strike{color:var(--ink-faint);text-decoration:line-through;opacity:.7}
+  @media(max-width:680px){.demo-grid{grid-template-columns:1fr}.demo-col.raw{border-right:none;border-bottom:1px solid var(--line)}}
+
+  /* FLOW BAR pill */
+  .flowbar{position:relative;z-index:2;margin:-26px auto 0;width:fit-content;display:flex;align-items:center;gap:14px;background:#121019;color:#fff;padding:12px 22px;border-radius:999px;box-shadow:0 18px 40px rgba(18,16,25,.4)}
+  .flowbar .eq{display:flex;align-items:flex-end;gap:3px;height:20px}
+  .flowbar .eq span{width:3px;background:linear-gradient(var(--brand),var(--brand-2));border-radius:3px;animation:eq 1s ease-in-out infinite}
+  .flowbar .eq span:nth-child(1){height:8px;animation-delay:0s}
+  .flowbar .eq span:nth-child(2){height:18px;animation-delay:.15s}
+  .flowbar .eq span:nth-child(3){height:12px;animation-delay:.3s}
+  .flowbar .eq span:nth-child(4){height:20px;animation-delay:.45s}
+  .flowbar .eq span:nth-child(5){height:9px;animation-delay:.6s}
+  @keyframes eq{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+  .flowbar .fb-text{font-size:14px;font-weight:500;opacity:.9}
+
+  /* SECTION shells */
+  section{position:relative}
+  .section-pad{padding:clamp(60px,9vw,110px) 0}
+  .section-head{text-align:center;max-width:62ch;margin:0 auto 52px}
+  h2{font-size:clamp(28px,4.2vw,46px);line-height:1.08;letter-spacing:-.025em;font-weight:800}
+  .section-head p{margin-top:16px;font-size:clamp(16px,1.9vw,19px);color:var(--ink-soft)}
+
+  /* trust strip */
+  .trust{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2)}
+  .trust .wrap{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 40px;padding:26px 24px}
+  .trust .item{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:500;color:var(--ink-soft)}
+  .trust .item svg{width:18px;height:18px;color:var(--brand)}
+
+  /* features */
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media(max-width:900px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.features-grid{grid-template-columns:1fr}}
+  .fcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);transition:.2s ease}
+  .fcard:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(21,20,27,.10);border-color:rgba(106,123,255,.28)}
+  .ficon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;margin-bottom:16px;background:linear-gradient(135deg,rgba(106,123,255,.14),rgba(168,85,247,.14));color:var(--brand-ink)}
+  .ficon svg{width:22px;height:22px}
+  .fcard h3{font-size:17.5px;font-weight:700;letter-spacing:-.01em}
+  .fcard p{margin-top:8px;font-size:14.5px;color:var(--ink-soft)}
+
+  /* speed band */
+  .band{background:linear-gradient(120deg,#141225,#241a3d);color:#fff;border-radius:28px;padding:clamp(36px,6vw,64px);text-align:center;position:relative;overflow:hidden}
+  .band .glow{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(138,120,255,.5),transparent 65%);filter:blur(50px);top:-140px;left:50%;transform:translateX(-50%)}
+  .band h2{position:relative;color:#fff}
+  .band p{position:relative;margin:16px auto 0;max-width:56ch;color:rgba(255,255,255,.78);font-size:18px}
+  .band .stat{position:relative;display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin-top:38px}
+  .band .stat .n{font-size:44px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(120deg,#a9b4ff,#e0b3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .band .stat .l{font-size:14px;color:rgba(255,255,255,.6);margin-top:2px}
+
+  /* how it works */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media(max-width:800px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow)}
+  .step .num{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font-weight:700;display:grid;place-items:center;font-size:15px;margin-bottom:14px}
+  .step h3{font-size:17px;font-weight:700}
+  .step p{margin-top:7px;font-size:14.5px;color:var(--ink-soft)}
+
+  /* INVITE */
+  .invite{background:var(--bg-2);border-top:1px solid var(--line)}
+  .invite-card{max-width:640px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow-lg);padding:clamp(28px,5vw,46px)}
+  .invite-card .eyebrow{margin-bottom:18px}
+  .invite-card h2{font-size:clamp(26px,3.6vw,38px)}
+  .invite-card .lead{margin-top:12px;color:var(--ink-soft);font-size:16.5px}
+  form{margin-top:26px;display:grid;gap:16px}
+  .field{display:grid;gap:7px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+  label{font-size:13.5px;font-weight:600;color:var(--ink-soft)}
+  label .req{color:var(--brand-2)}
+  input,textarea{
+    font-family:inherit;font-size:15px;color:var(--ink);
+    background:var(--bg);border:1px solid var(--line);border-radius:13px;
+    padding:13px 15px;transition:.15s;width:100%;
+  }
+  input:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(106,123,255,.14)}
+  textarea{resize:vertical;min-height:110px}
+  .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+  .charcount{font-size:12px;color:var(--ink-faint);text-align:right;margin-top:-2px}
+  .form-note{font-size:12.5px;color:var(--ink-faint);display:flex;align-items:flex-start;gap:8px;margin-top:2px}
+  .form-note svg{width:15px;height:15px;flex:0 0 auto;margin-top:1px;color:var(--brand)}
+  button[type=submit]{width:100%;font-size:16px;padding:15px}
+  .form-status{font-size:14px;font-weight:500;padding:12px 14px;border-radius:12px;display:none}
+  .form-status.err{display:block;background:rgba(255,95,87,.1);color:#c0392b;border:1px solid rgba(255,95,87,.25)}
+  .form-success{display:none;text-align:center;padding:20px 6px}
+  .form-success .check{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;margin:0 auto 16px}
+  .form-success .check svg{width:28px;height:28px;color:#fff}
+  .form-success h3{font-size:22px;font-weight:800}
+  .form-success p{margin-top:8px;color:var(--ink-soft);font-size:15.5px}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:40px 0;text-align:center;color:var(--ink-faint);font-size:13.5px}
+  footer .logo{justify-content:center;color:var(--ink);margin-bottom:14px;font-size:16px}
+  footer .fnote{max-width:60ch;margin:0 auto}
+  footer .disc{margin-top:14px;font-size:12px;color:var(--ink-faint);opacity:.85}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(18px);transition:.6s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top">
+      <span class="mark"><svg viewBox="0 0 100 100" fill="none"><g fill="#fff"><rect x="30" y="40" width="7" height="20" rx="3.5"/><rect x="43" y="30" width="7" height="40" rx="3.5"/><rect x="56" y="36" width="7" height="28" rx="3.5"/><rect x="69" y="44" width="7" height="12" rx="3.5"/></g></svg></span>
+      CireneFlow
+    </a>
+    <nav class="nav-links">
+      <a class="link" href="#features">Features</a>
+      <a class="link" href="#how">How it works</a>
+      <a class="link" href="#privacy">Privacy</a>
+      <div class="nav-cta"><a class="btn btn-primary" href="#invite">Request an invite</a></div>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+<section class="hero">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>By invitation · macOS · 100% on-device</span>
+    <h1>Don't type. <span class="grad-text">Just speak.</span></h1>
+    <p class="sub">CireneFlow turns your voice into clean, perfectly formatted text in every app on your Mac — powered entirely by on-device AI. Nothing you say ever leaves your computer.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#invite">Request an invite →</a>
+      <a class="btn btn-ghost" href="#features">See what it does</a>
+    </div>
+    <div class="meta">
+      <b>Apple Silicon</b><span class="sep"></span><b>macOS 26+</b><span class="sep"></span><b>Private by design</b><span class="sep"></span><b>No account, no cloud</b>
+    </div>
+
+    <div class="demo reveal">
+      <div class="demo-card">
+        <div class="demo-top">
+          <span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>
+          <span class="title">Speaking into any text field</span>
+        </div>
+        <div class="demo-grid">
+          <div class="demo-col raw">
+            <div class="demo-label raw">◍ What you say</div>
+            <p>um hey so i was thinking we should uh move the meeting to friday <span class="strike">i think i think</span> like maybe 2pm and can you send cheyene the notes she asked twice already</p>
+          </div>
+          <div class="demo-col clean">
+            <div class="demo-label clean">✦ What CireneFlow types</div>
+            <p>Hey — I was thinking we should move the meeting to Friday, maybe 2 PM. Can you send Cheyene the notes? She's asked twice already.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flowbar">
+        <div class="eq"><span></span><span></span><span></span><span></span><span></span></div>
+        <span class="fb-text">Listening… release to insert</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div class="wrap">
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/></svg> On-device speech recognition</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 13 4 4L19 7"/></svg> AI cleanup runs locally</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg> No cloud, no uploads</div>
+    <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg> Works in every app</div>
+  </div>
+</section>
+
+<section class="section-pad" id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Everything you need to <span class="grad-text">write with your voice</span></h2>
+      <p>Hold a key, talk naturally, and let on-device AI turn the mess into clean text — wherever your cursor is.</p>
+    </div>
+    <div class="features-grid">
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8"/></svg></div>
+        <h3>Works in every app</h3>
+        <p>Chrome, Gmail, Word, Slack, Notes, your code editor — anywhere you can type, you can talk. No integrations to set up.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3M12 18v3M5 12H2M22 12h-3M6 6l-2-2M20 20l-2-2M6 18l-2 2M20 4l-2 2"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <h3>AI auto-edits</h3>
+        <p>Filler words vanish, punctuation and capitalization are fixed, lists get formatted, and quotes land where they should. Rambles become polished prose.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v4"/></svg></div>
+        <h3>Push-to-talk & hands-free</h3>
+        <p>Hold a key and speak; release to insert. Double-tap to lock hands-free mode and keep going without holding anything.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <h3>100% private, on-device</h3>
+        <p>Speech recognition and AI cleanup run entirely on your Mac. No audio, no text, and no account ever leaves the machine.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <h3>Personal dictionary</h3>
+        <p>Teach it the names, brands, jargon, and acronyms you use so they're always spelled the way you mean.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></div>
+        <h3>Snippets</h3>
+        <p>Speak a short cue and CireneFlow drops in full, formatted text — scheduling links, intros, canned replies, and more.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 9 3 3-3 3M13 15h3"/><rect x="3" y="4" width="18" height="16" rx="2"/></svg></div>
+        <h3>Command Mode</h3>
+        <p>Tell it what to do — “make this a bulleted list,” “rewrite more formally,” “translate to Spanish” — and it transforms the text in place.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+        <h3>Built for developers</h3>
+        <p>Dictate in natural language and get code-aware formatting — commit messages, comments, and prose that respects how you build.</p>
+      </div>
+      <div class="fcard reveal">
+        <div class="ficon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
+        <h3>Backtrack & edit as you speak</h3>
+        <p>Correct yourself mid-sentence and CireneFlow keeps up — the final text reflects what you meant, not every false start.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" style="padding-top:0">
+  <div class="wrap">
+    <div class="band reveal">
+      <div class="glow"></div>
+      <h2>Talk at the speed of thought</h2>
+      <p>Most people speak far faster than they type. CireneFlow captures that speed and hands you clean text — so the words keep up with the ideas.</p>
+      <div class="stat">
+        <div><div class="n">~4×</div><div class="l">faster than typing</div></div>
+        <div><div class="n">0</div><div class="l">bytes sent to the cloud</div></div>
+        <div><div class="n">1 key</div><div class="l">to start talking anywhere</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Up and running in a minute</h2>
+      <p>No setup wizards, no accounts. Grant two permissions and start talking.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><div class="num">1</div><h3>Install & grant access</h3><p>Open CireneFlow and allow Microphone and Accessibility — the two permissions it needs to hear you and type for you.</p></div>
+      <div class="step reveal"><div class="num">2</div><h3>Hold your key & speak</h3><p>Put your cursor anywhere text goes, hold your dictation key, and talk. Release to insert polished text instantly.</p></div>
+      <div class="step reveal"><div class="num">3</div><h3>Make it yours</h3><p>Add dictionary words and snippets, pick your trigger key, and CireneFlow adapts to how you write.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" id="privacy" style="padding-top:0">
+  <div class="wrap">
+    <div class="band reveal" style="background:linear-gradient(120deg,#0f1a16,#14261f)">
+      <div class="glow" style="background:radial-gradient(circle,rgba(80,220,160,.4),transparent 65%)"></div>
+      <h2>Private by design — not by policy</h2>
+      <p>CireneFlow does its thinking on your Mac. Because there's no server involved, there's no transcript sitting in someone else's datacenter, no account to breach, and nothing to opt out of. Your voice stays yours.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad invite" id="invite">
+  <div class="wrap">
+    <div class="invite-card reveal">
+      <span class="eyebrow"><span class="dot"></span>By invitation only</span>
+      <h2>Request access</h2>
+      <p class="lead">CireneFlow is in a private preview. Tell us a little about you and we'll be in touch about an invite.</p>
+
+      <form id="inviteForm" novalidate>
+        <div class="row2">
+          <div class="field">
+            <label for="name">Name <span class="req">*</span></label>
+            <input id="name" name="name" type="text" autocomplete="name" maxlength="80" required placeholder="Jane Doe" />
+          </div>
+          <div class="field">
+            <label for="company">Company <span class="req">*</span></label>
+            <input id="company" name="company" type="text" autocomplete="organization" maxlength="120" required placeholder="Acme Inc." />
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Work email <span class="req">*</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" maxlength="120" required placeholder="jane@acme.com" />
+        </div>
+        <div class="field">
+          <label for="message">Message <span style="font-weight:500;color:var(--ink-faint)">(optional)</span></label>
+          <textarea id="message" name="message" maxlength="1000" placeholder="How do you plan to use CireneFlow?"></textarea>
+          <div class="charcount"><span id="cc">0</span>/1000</div>
+        </div>
+        <!-- honeypot: bots fill this; humans never see it -->
+        <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <div class="form-status err" id="formErr"></div>
+        <button type="submit" class="btn btn-primary" id="submitBtn">Request my invite</button>
+        <div class="form-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>We only use your details to consider your invite. No newsletters, no sharing.</span>
+        </div>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 13 4 4L19 7"/></svg></div>
+        <h3>Request received</h3>
+        <p>Thanks — your invite request is on its way. We'll reach out by email if there's a spot for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#top">
+      <span class="mark"><svg viewBox="0 0 100 100" fill="none"><g fill="#fff"><rect x="30" y="40" width="7" height="20" rx="3.5"/><rect x="43" y="30" width="7" height="40" rx="3.5"/><rect x="56" y="36" width="7" height="28" rx="3.5"/><rect x="69" y="44" width="7" height="12" rx="3.5"/></g></svg></span>
+      CireneFlow
+    </a>
+    <p class="fnote">Effortless, private voice dictation for Mac. Available by invitation.</p>
+    <p class="disc">© 2026 GrowTech Development, LLC · Requires Apple Silicon and macOS 26 or later.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // --- nav shadow on scroll ---
+  var nav = document.getElementById('nav');
+  var onScroll = function(){ nav.classList.toggle('scrolled', window.scrollY > 8); };
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // --- scroll reveal ---
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  // --- char counter ---
+  var msg = document.getElementById('message'), cc = document.getElementById('cc');
+  msg.addEventListener('input', function(){ cc.textContent = msg.value.length; });
+
+  // --- form handling (FormSubmit.co AJAX) ---
+  // NOTE: the first real submission triggers a one-time activation email from
+  // FormSubmit to the destination inbox — click the link in it once to enable delivery.
+  var ENDPOINT = "https://formsubmit.co/ajax/rgrow@growtechinc.com";
+  var form = document.getElementById('inviteForm');
+  var errBox = document.getElementById('formErr');
+  var btn = document.getElementById('submitBtn');
+  var successBox = document.getElementById('formSuccess');
+
+  function stripCtrl(str, keepNewline){
+    var out = '';
+    for (var i = 0; i < str.length; i++){
+      var c = str.charCodeAt(i);
+      if (c === 10 && keepNewline){ out += '\n'; continue; } // keep newlines in messages
+      if (c < 32 || c === 127) continue;                     // drop other control chars
+      out += str.charAt(i);
+    }
+    return out;
+  }
+  function sanitize(v, max){
+    return stripCtrl(String(v).replace(/[<>]/g, ''), false)
+      .replace(/\s+/g, ' ').trim().slice(0, max);
+  }
+  function sanitizeMultiline(v, max){
+    return stripCtrl(String(v).replace(/[<>]/g, ''), true)
+      .replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, max);
+  }
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  function showErr(m){ errBox.textContent = m; errBox.style.display = 'block'; }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errBox.style.display = 'none';
+
+    // honeypot — silently accept-and-drop bot submissions
+    if (form._honey.value.trim() !== '') { form.reset(); return; }
+
+    var name = sanitize(document.getElementById('name').value, 80);
+    var company = sanitize(document.getElementById('company').value, 120);
+    var email = sanitize(document.getElementById('email').value, 120);
+    var message = sanitizeMultiline(document.getElementById('message').value, 1000);
+
+    if (!name)  return showErr('Please enter your name.');
+    if (!company) return showErr('Please enter your company.');
+    if (!EMAIL_RE.test(email)) return showErr('Please enter a valid email address.');
+
+    var payload = {
+      name: name,
+      company: company,
+      email: email,
+      message: message || '(no message)',
+      _subject: "Cirene Flow App Request",
+      _template: "table"
+    };
+
+    btn.disabled = true;
+    var original = btn.textContent;
+    btn.textContent = 'Sending…';
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return {ok:r.ok, d:d}; }); })
+    .then(function(res){
+      if (res.ok) {
+        form.style.display = 'none';
+        successBox.style.display = 'block';
+        successBox.scrollIntoView({behavior:'smooth', block:'center'});
+      } else {
+        btn.disabled = false; btn.textContent = original;
+        showErr((res.d && res.d.message) ? res.d.message : 'Something went wrong. Please try again in a moment.');
+      }
+    })
+    .catch(function(){
+      btn.disabled = false; btn.textContent = original;
+      showErr('Network error — please check your connection and try again.');
+    });
+  });
+})();
+</script>
+</body>
+</html>
