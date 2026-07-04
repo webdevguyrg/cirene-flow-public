@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://cireneflow.com/" />
 <link rel="canonical" href="https://cireneflow.com/" />
 <meta name="theme-color" content="#0e0d14" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236a7bff'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='26' fill='url(%23g)'/%3E%3Cg fill='white'%3E%3Crect x='30' y='40' width='6' height='20' rx='3'/%3E%3Crect x='42' y='30' width='6' height='40' rx='3'/%3E%3Crect x='54' y='36' width='6' height='28' rx='3'/%3E%3Crect x='66' y='44' width='6' height='12' rx='3'/%3E%3C/g%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='1' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%2346406a'/%3E%3Cstop offset='1' stop-color='%238659ef'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Cg fill='white'%3E%3Crect x='9.6' y='41' width='4' height='18' rx='2'/%3E%3Crect x='16' y='33' width='4' height='34' rx='2'/%3E%3Crect x='22.4' y='37' width='4' height='26' rx='2'/%3E%3Crect x='28.8' y='24' width='4' height='52' rx='2'/%3E%3Crect x='35.2' y='16' width='4' height='68' rx='2'/%3E%3Crect x='41.6' y='22' width='4' height='56' rx='2'/%3E%3Crect x='48' y='8' width='4' height='84' rx='2'/%3E%3Crect x='54.4' y='22' width='4' height='56' rx='2'/%3E%3Crect x='60.8' y='16' width='4' height='68' rx='2'/%3E%3Crect x='67.2' y='24' width='4' height='52' rx='2'/%3E%3Crect x='73.6' y='37' width='4' height='26' rx='2'/%3E%3Crect x='80' y='33' width='4' height='34' rx='2'/%3E%3Crect x='86.4' y='41' width='4' height='18' rx='2'/%3E%3C/g%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -69,8 +69,9 @@
   header.nav.scrolled{border-bottom-color:var(--line);background:rgba(250,249,246,.85)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
   .logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:18px;letter-spacing:-.01em}
-  .logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;box-shadow:0 4px 12px rgba(106,123,255,.4)}
-  .logo .mark svg{width:17px;height:17px}
+  .logo .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(160deg,#46406a,#8659ef);display:grid;place-items:center;box-shadow:0 4px 12px rgba(102,79,200,.45)}
+  .logo .mark svg{width:21px;height:21px}
+  .logo .flow{color:#8659ef}
   .nav-links{display:flex;align-items:center;gap:30px}
   .nav-links a.link{font-size:14.5px;font-weight:500;color:var(--ink-soft);transition:.15s}
   .nav-links a.link:hover{color:var(--ink)}
@@ -209,8 +210,8 @@
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
     <a class="logo" href="#top">
-      <span class="mark"><svg viewBox="0 0 100 100" fill="none"><g fill="#fff"><rect x="30" y="40" width="7" height="20" rx="3.5"/><rect x="43" y="30" width="7" height="40" rx="3.5"/><rect x="56" y="36" width="7" height="28" rx="3.5"/><rect x="69" y="44" width="7" height="12" rx="3.5"/></g></svg></span>
-      CireneFlow
+      <span class="mark"><svg viewBox="0 0 100 100" fill="none"><g fill="#fff"><rect x="9.6" y="41" width="4" height="18" rx="2"/><rect x="16" y="33" width="4" height="34" rx="2"/><rect x="22.4" y="37" width="4" height="26" rx="2"/><rect x="28.8" y="24" width="4" height="52" rx="2"/><rect x="35.2" y="16" width="4" height="68" rx="2"/><rect x="41.6" y="22" width="4" height="56" rx="2"/><rect x="48" y="8" width="4" height="84" rx="2"/><rect x="54.4" y="22" width="4" height="56" rx="2"/><rect x="60.8" y="16" width="4" height="68" rx="2"/><rect x="67.2" y="24" width="4" height="52" rx="2"/><rect x="73.6" y="37" width="4" height="26" rx="2"/><rect x="80" y="33" width="4" height="34" rx="2"/><rect x="86.4" y="41" width="4" height="18" rx="2"/></g></svg></span>
+      Cirene<span class="flow">Flow</span>
     </a>
     <nav class="nav-links">
       <a class="link" href="#features">Features</a>
@@ -415,8 +416,8 @@
 <footer>
   <div class="wrap">
     <a class="logo" href="#top">
-      <span class="mark"><svg viewBox="0 0 100 100" fill="none"><g fill="#fff"><rect x="30" y="40" width="7" height="20" rx="3.5"/><rect x="43" y="30" width="7" height="40" rx="3.5"/><rect x="56" y="36" width="7" height="28" rx="3.5"/><rect x="69" y="44" width="7" height="12" rx="3.5"/></g></svg></span>
-      CireneFlow
+      <span class="mark"><svg viewBox="0 0 100 100" fill="none"><g fill="#fff"><rect x="9.6" y="41" width="4" height="18" rx="2"/><rect x="16" y="33" width="4" height="34" rx="2"/><rect x="22.4" y="37" width="4" height="26" rx="2"/><rect x="28.8" y="24" width="4" height="52" rx="2"/><rect x="35.2" y="16" width="4" height="68" rx="2"/><rect x="41.6" y="22" width="4" height="56" rx="2"/><rect x="48" y="8" width="4" height="84" rx="2"/><rect x="54.4" y="22" width="4" height="56" rx="2"/><rect x="60.8" y="16" width="4" height="68" rx="2"/><rect x="67.2" y="24" width="4" height="52" rx="2"/><rect x="73.6" y="37" width="4" height="26" rx="2"/><rect x="80" y="33" width="4" height="34" rx="2"/><rect x="86.4" y="41" width="4" height="18" rx="2"/></g></svg></span>
+      Cirene<span class="flow">Flow</span>
     </a>
     <p class="fnote">Effortless, private voice dictation for Mac. Available by invitation.</p>
     <p class="disc">© 2026 GrowTech Development, LLC · Requires Apple Silicon and macOS 26 or later.</p>
