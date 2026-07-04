@@ -5,10 +5,11 @@ Public marketing site for **CireneFlow**, a private, on-device voice-dictation a
 ## Hosting
 
 This is a single, self-contained static page — no build step, no framework, no server.
-It is served with **GitHub Pages** from the `main` branch (root folder). The `.nojekyll`
-file tells Pages to serve the files as-is (no Jekyll processing).
+It is served with **GitHub Pages** using the workflow in
+`.github/workflows/deploy-pages.yml`. The `.nojekyll` file tells Pages to serve the
+files as-is (no Jekyll processing).
 
-To enable: repository **Settings → Pages → Source: Deploy from a branch → `main` / `/ (root)`**.
+To enable: repository **Settings → Pages → Source: GitHub Actions**.
 The site then goes live at `https://webdevguyrg.github.io/cirene-flow-public/`.
 
 ## Invitation form
